@@ -3,12 +3,16 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import { getAName } from './usernames';
-import { sendNameToServer } from './socket'
+import {
+  sendNameToServer,
+  getCurrentPot
+} from './socket'
 class App extends Component {
   componentDidMount() {
-    console.log(this.props);
+    const { dispatch } = this.props;
     const name = getAName()
-    console.log(name)
+    getCurrentPot()
+    // dispatch({ type: 'ASSIGNED_USERNAME', name })
     sendNameToServer(name)
   }
   render() {

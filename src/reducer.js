@@ -4,7 +4,11 @@ const reducer = (state = {}, action) => {
             state = { ...state, name: action.name }
             break;
         case 'PUT_ALL_NAMES_TO_REDUCER':
+            console.log(state, action)
             state = { ...state, names: action.names }
+            break;
+        case 'CURRENT_POT_TO_REDUCER':
+            state = { ...state, pot: action.pot }
             break;
         default:
             break;

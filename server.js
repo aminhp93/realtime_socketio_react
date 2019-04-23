@@ -7,10 +7,10 @@ server.listen(8000, () => console.log('connected to port 8000'))
 
 app.use(cors())
 
+let pot = 0;
 let names = []
 
 io.on('connection', socket => {
-
     socket.on('SEND_NAME_TO_SERVER', name => {
         console.log(121, name)
         names = [...names, name]
@@ -18,4 +18,6 @@ io.on('connection', socket => {
         socket.broadcast.emit('SEND_NAMES_TO_CLIENTS', names);
         socket.emit('SEND_NAMES_TO_CLIENTS', names)
     })
+
+    socket.on('GET_CURRENT_POT', () => socket.emit('CURRENT_POT', pot))
 })
