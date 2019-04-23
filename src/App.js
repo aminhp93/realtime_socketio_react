@@ -3,7 +3,12 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
 import { getAName } from "./usernames";
-import { sendNameToServer, getCurrentPot } from "./socket";
+import {
+  sendNameToServer,
+  getCurrentPot,
+  sendPitchInToServer,
+  sendGetOneToServer
+} from "./socket";
 import SnackBarNotif from "./SnackBarNotif";
 
 class App extends Component {
@@ -14,6 +19,22 @@ class App extends Component {
     dispatch({ type: "ASSIGNED_USERNAME", name });
     sendNameToServer(name);
   }
+
+  pitchIn = () => {
+    const { dispatch, name } = this.props;
+    dispatch({ type: "PITCH_IN" });
+    sendPitchInToServer(name);
+  };
+
+  getOne = () => {
+    console.log(30, this);
+    const { dispatch, name } = this.props;
+    dispatch({ type: "GET_ONE" });
+    sendGetOneToServer(name);
+  };
+
+  closeSnackbar() {}
+
   render() {
     console.log(this.props);
     const { pot, name, names, snackbarIsOpen, mode, whoDidIt } = this.props;

@@ -1,28 +1,47 @@
-import io from 'socket.io-client';
+import io from "socket.io-client";
 
-const socket = io('http://localhost:8000');
+const socket = io("http://localhost:8000");
 
 const configureSocket = dispatch => {
-    socket.on('connect', () => {
-        console.log('connected')
-    })
+  socket.on("connect", () => {
+    console.log("connected");
+  });
 
-    socket.on('SEND_NAMES_TO_CLIENTS', names => {
-        console.log(12, names)
-        dispatch({ type: 'PUT_ALL_NAMES_TO_REDUCER', names })
-    })
+  socket.on("SEND_NAMES_TO_CLIENTS", names => {
+    console.log(12, names);
+    dispatch({ type: "PUT_ALL_NAMES_TO_REDUCER", names });
+  });
 
-    socket.on('CURRENT_POT', pot => {
-        dispatch({ type: 'CURRENT_POT_TO_REDUCER', pot: pot })
-    })
+  socket.on("CURRENT_POT", pot => {
+    dispatch({ type: "CURRENT_POT_TO_REDUCER", pot: pot });
+  });
 
-    return socket;
-}
+  socket.on("GUESS_WHO_GOT_ONE", name => {
+    dispatch({ type: "GOT_ONE", name });
+  });
+
+  socket.on("GUESS_WHO_PITCHED_IN", name => {
+    dispatch({ type: "PICTHED_IN", name });
+  });
+
+  socket.on("UPDATED_POT", state => {
+    dispatch({ type: "DELIVER_UPDATED_POT_TO_REDUCER", updatedPot: state });
+  });
+
+  return socket;
+};
 
 export const sendNameToServer = name => {
-    console.log(18, name)
-    socket.emit('SEND_NAME_TO_SERVER', name);
-}
+  socket.emit("SEND_NAME_TO_SERVER", name);
+};
 
-export const getCurrentPot = () => socket.emit('GET_CURRENT_POT')
-export default configureSocket
+export const sendGetOneToServer = name => {
+  socket.emit("SOMEONE_GOT_ONE", name);
+};
+
+export const sendPitchInToServer = name => {
+  socket.emit("SOMEONE_PITCHED_IN", name);
+};
+
+export const getCurrentPot = () => socket.emit("GET_CURRENT_POT");
+export default configureSocket;
