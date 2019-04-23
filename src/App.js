@@ -1,28 +1,28 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import { connect } from 'react-redux';
+import { getAName } from './usernames';
+import { sendNameToServer } from './socket'
 class App extends Component {
+  componentDidMount() {
+    console.log(this.props);
+    const name = getAName()
+    console.log(name)
+    sendNameToServer(name)
+  }
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = state => {
+  console.log(state)
+  return state
+}
+
+export default connect(mapStateToProps)(App)
