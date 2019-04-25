@@ -1,84 +1,89 @@
-import React, { Component } from "react";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import { connect } from "react-redux";
-import { getAName } from "./usernames";
+import React, { Component } from 'react';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import { connect } from 'react-redux';
 import {
-  sendNameToServer,
   getCurrentPot,
+  sendNameToServer,
   sendPitchInToServer,
   sendGetOneToServer
-} from "./socket";
-import SnackBarNotif from "./SnackBarNotif";
+} from './socket';
+import { getAName } from './usernames';
+import SnackBarNotif from './SnackbarNotif';
 
 class App extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     const name = getAName();
-    getCurrentPot();
-    dispatch({ type: "ASSIGNED_USERNAME", name });
+    getCurrentPot(dispatch);
+    dispatch({ type: 'ASSIGNED_USERNAME', name });
     sendNameToServer(name);
   }
 
-  pitchIn = () => {
-    const { dispatch, name } = this.props;
-    dispatch({ type: "PITCH_IN" });
-    sendPitchInToServer(name);
-  };
+  closeSnackbar = () => this.props.dispatch({ type: 'ANOTHER_ONE_PITCHED_IN' });
 
   getOne = () => {
-    console.log(30, this);
     const { dispatch, name } = this.props;
-    dispatch({ type: "GET_ONE" });
+    dispatch({ type: 'GET_ONE' });
     sendGetOneToServer(name);
   };
 
-  closeSnackbar() {}
+  pitchIn = () => {
+    const { dispatch, name } = this.props;
+    dispatch({ type: 'PITCH_IN' });
+    sendPitchInToServer(name);
+  };
 
   render() {
-    console.log(this.props);
-    const { pot, name, names, snackbarIsOpen, mode, whoDidIt } = this.props;
+    const {
+      pot,
+      name,
+      names,
+      snackbarIsOpen,
+      mode,
+      whoDidIt
+    } = this.props;
     return (
       <Grid container justify="center">
-        <Grid style={{ textAlign: "center" }} item xs={12}>
+        <Grid style={{ textAlign: 'center' }} item xs={12}>
           <h1>{pot}</h1>
         </Grid>
-        <Grid style={{ textAlign: "right", padding: "10px" }} item xs={6}>
-          <Button onClick={this.pitchIn} variant="contained" color="primary">
+        <Grid style={{ textAlign: 'right', padding: '10px' }} item xs={6}>
+          <Button onClick={this.pitchIn} variant="raised" color="primary">
             pitch in!
           </Button>
         </Grid>
-        <Grid style={{ textAlign: "left", padding: "10px" }} item xs={6}>
-          <Button onClick={this.getOne} variant="contained" color="primary">
+        <Grid style={{ textAlign: 'left', padding: '10px' }} item xs={6}>
+          <Button onClick={this.getOne} variant="raised" color="secondary">
             get one!
           </Button>
         </Grid>
-        <Grid style={{ textAlign: "center" }} item xs={12}>
+        <Grid style={{ textAlign: 'center' }} item xs={12}>
           <div
             style={{
-              height: "500px",
-              textAlign: "center",
-              width: "300px",
-              border: "1px solod black",
-              display: "inline-block"
+              height: '500px',
+              textAlign: 'center',
+              width: '300px',
+              border: '1px solod black',
+              display: 'inline-block'
             }}
           >
-            Your assigned username is{" "}
-            <span style={{ color: "red" }}>{name}</span>
-            <div style={{ padding: "10px" }}>
+            Your assigned username is{' '}
+            <span style={{ color: 'red' }}>{name}</span>
+            <div style={{ padding: '10px' }}>
               Other members:
-              {(!names || names.length) <= 1 ? (
-                <div style={{ color: "red" }}>No other members yet</div>
+              {names.length <= 1 ? (
+                <div style={{ color: 'red' }}>No other members yet</div>
               ) : (
-                names.map(member => (
-                  <div
-                    style={{ display: name === member && "none" }}
-                    key={member}
-                  >
-                    {member}
-                  </div>
-                ))
-              )}
+                  names.map(member => (
+                    <div
+                      style={{ display: name === member && 'none' }}
+                      key={member}
+                    >
+                      {member}
+                    </div>
+                  ))
+                )}
             </div>
           </div>
         </Grid>
@@ -94,8 +99,14 @@ class App extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state);
-  return state;
-};
+  return {
+    pot: state.pot,
+    name: state.name,
+    names: state.names,
+    snackbarIsOpen: state.snackbarIsOpen,
+    mode: state.mode,
+    whoDidIt: state.whoDidIt
+  }
+}
 
 export default connect(mapStateToProps)(App);
